@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Registration</title>
+    <style>
+        /* Simple CSS for popup styling */
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 1px solid black;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Dark overlay background */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 900;
+        }
+    </style>
+</head>
+<body>
+    <h1>Event Registration</h1>
+    <p>Title: <%= event.title %></p>
+    <p>Date: <%= new Date(event.date).toDateString() %></p>
+    <p>Location: <%= event.location %></p>
+    <p>Description: <%= event.description %></p>
+    <p>Registration Fee per Person: <span id="registration-fee"><%= event.registrationFee %></span></p>
+
+    <form id="registration-form" action="/event" method="POST" onsubmit="return showPopup()">
+        <label for="slots">Number of Slots:</label>
+        <input type="number" id="slots" name="slots" min="1" required>
+        <button type="submit">Register</button>
+    </form>
+
+    <div id="overlay"></div>
+    <div id="popup">
+        <h2>Registration Summary</h2>
+        <p id="popup-slots"></p>
+        <p>Event Title: <%= event.title %></p>
+        <p>Event Date: <%= new Date(event.date).toDateString() %></p>
+        <p>Location: <%= event.location %></p>
+        <button onclick="confirmRegistration()">Confirm Registration</button>
+        <button onclick="closePopup()">Cancel</button>
+    </div>
+
+    <% if (success_msg) { %>
+        <div style="color: green;"><%= success_msg %></div>
+    <% } %>
+    <% if (error_msg) { %>
+        <div style="color: red;"><%= error_msg %></div>
+    <% } %>
+
+    <script>
+        function showPopup() {
+            const slots = document.getElementById("slots").value;
+            
+            // Update popup content
+            document.getElementById("popup-slots").innerText = `Number of Slots: ${slots}`;
+
+            // Show the popup and overlay
+            document.getElementById("popup").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+
+            // Prevent form submission
+            return false;
+        }
+
+        function confirmRegistration() {
+            // Set the form's action to the desired endpoint
+            document.getElementById("registration-form").action = "/my-events"; // Updated to "/my-events"
+            document.getElementById("registration-form").submit(); // Submit the form
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none"; // Close the popup
+            document.getElementById("overlay").style.display = "none"; // Close the overlay
+        }
+    </script>
+</body>
+</html>

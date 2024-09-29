@@ -1,0 +1,16 @@
+<h1>My Events</h1>
+
+<% if (registrations.length > 0) { %>
+    <ul>
+        <% registrations.forEach(reg => { %>
+            <li>
+                <p>Event: <%= reg.eventId.title %></p>
+                <p>Date: <%= new Date(reg.eventId.date).toDateString() %></p>
+                <input type="checkbox" onchange="location.href='/feedback?registrationId=<%= reg._id %>'" />
+                <label>Attended</label>
+            </li>
+        <% }) %>
+    </ul>
+<% } else { %>
+    <p>No registered events found.</p>
+<% } %>
